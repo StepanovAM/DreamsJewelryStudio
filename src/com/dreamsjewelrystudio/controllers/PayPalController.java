@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dreamsjewelrystudio.util.PayPalIntegrator;
+import com.dreamsjewelrystudio.util.Util;
 
 @RestController
 @RequestMapping(value = "/paypal")
@@ -35,7 +36,7 @@ public class PayPalController {
     @ExceptionHandler(Exception.class)
 	public String handleException(Exception e, Model model) {
 		e.printStackTrace();
-		if(e.getMessage()!=null && e.getMessage().length()>0) model.addAttribute("exceptionMsg", e.getMessage());
+		if(Util.isStringNotEmpty(e.getMessage())) model.addAttribute("exceptionMsg", e.getMessage());
 		return "404";
 	}
 }

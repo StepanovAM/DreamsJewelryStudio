@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dreamsjewelrystudio.models.Messages;
 import com.dreamsjewelrystudio.service.MessagesService;
+import com.dreamsjewelrystudio.util.Util;
 
 @Controller
 public class ContactController {
@@ -44,7 +45,7 @@ public class ContactController {
 	@ExceptionHandler(Exception.class)
 	public String handleException(Exception e, Model model) {
 		e.printStackTrace();
-		if(e.getMessage()!=null && e.getMessage().length()>0) model.addAttribute("exceptionMsg", e.getMessage());
+		if(Util.isStringNotEmpty(e.getMessage())) model.addAttribute("exceptionMsg", e.getMessage());
 		return "404";
 	}
 }

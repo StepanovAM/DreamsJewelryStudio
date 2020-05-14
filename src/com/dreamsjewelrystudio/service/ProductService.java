@@ -7,9 +7,11 @@ import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dreamsjewelrystudio.models.Product;
+import com.dreamsjewelrystudio.projections.RelatedProductsProjection;
 import com.dreamsjewelrystudio.repository.ProductRepository;
 
 @Service
@@ -54,10 +56,15 @@ public class ProductService{
 		return list;
 	}
 	
-	public List<Product> findProdcutsWithPriceByTypeOrCategoryLimit(String arg, int from, int limit){
+	public List<Product> findProductsWithPriceByTypeOrCategoryLimit(String arg, int from, int limit){
 		String attribute = "category";
-		if(arg.toLowerCase().contains("resin") || arg.toLowerCase().contains("gemstone")) 
+		if(arg.contains("Jewelry")) {
 			attribute = "product_type";
+			switch(arg) {
+				case "Epoxy Resin Jewelry": arg = "Resin"; break;
+				case "Gemstone Jewelry": arg = "Gemstone"; break;
+			}
+		}
 		
 		EntityManager em = emf.createEntityManager();
 		List<Product> list = em.createQuery("SELECT p "
@@ -110,5 +117,9 @@ public class ProductService{
 		
 		em.close();
 		return prds;
+	}
+	
+	public List<RelatedProductsProjection> findRelated(String category, Long id, Pageable pageable){
+		return prdRepository.findAll(category, id, pageable);
 	}
 } 

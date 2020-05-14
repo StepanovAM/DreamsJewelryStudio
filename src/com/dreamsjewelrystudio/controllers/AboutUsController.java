@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.dreamsjewelrystudio.util.Util;
+
 @Controller
 public class AboutUsController {
 	
@@ -16,7 +18,7 @@ public class AboutUsController {
 	@ExceptionHandler(Exception.class)
 	public String handleException(Exception e, Model model) {
 		e.printStackTrace();
-		if(e.getMessage()!=null && e.getMessage().length()>0) model.addAttribute("exceptionMsg", e.getMessage());
+		if(Util.isStringNotEmpty(e.getMessage())) model.addAttribute("exceptionMsg", e.getMessage());
 		return "404";
 	}
 }

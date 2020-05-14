@@ -16,4 +16,8 @@ public final class Util {
 				  .findFirst()
 				  .orElse(null);
 	}
+	
+	public static boolean isStringNotEmpty(String str) {
+		return str!=null && str.length()!=0;
+	}
 }
