@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,18 @@ import com.dreamsjewelrystudio.projections.RelatedProductsProjection;
 import com.dreamsjewelrystudio.repository.ProductRepository;
 
 @Service
-public class ProductService{
+public class ProductService extends CRUDService<Product>{
 	
+	public ProductService() {
+		super(Product.class);
+	}
+
 	@Autowired private EntityManagerFactory emf;
 	@Autowired private ProductRepository prdRepository;
+	
+	public List<Product> findAll(){
+		return prdRepository.findAll();
+	}
 	
 	public int selectCountProduct() {
 		return (int) prdRepository.count();
@@ -28,23 +37,7 @@ public class ProductService{
 		return prdRepository.saveAndFlush(product);
 	}
 	
-	public List<Product> findAllWithChildren(){
-		EntityManager em = emf.createEntityManager();
-		List<Product> products = em.createQuery("SELECT distinct p "
-						+ "FROM Product p ", Product.class)
-				.setHint("javax.persistence.fetchgraph", em.createEntityGraph("prd-prs"))
-				.getResultList();
-		products  = em.createQuery("SELECT distinct p "
-						+ "FROM Product p "
-						+ "WHERE p in :products", Product.class)
-				.setParameter("products", products)
-				.setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
-				.setHint("javax.persistence.fetchgraph", em.createEntityGraph("prd-pimg"))
-				.getResultList();
-		em.close();
-		return products;
-	}
-	
+	@Cacheable("productsCache")
 	public List<Product> findProductsWithPriceLimit(int from, int limit){
 		EntityManager em = emf.createEntityManager();
 		List<Product> list = em.createQuery("SELECT p FROM Product p", Product.class)
@@ -56,16 +49,7 @@ public class ProductService{
 		return list;
 	}
 	
-	public List<Product> findProductsWithPriceByTypeOrCategoryLimit(String arg, int from, int limit){
-		String attribute = "category";
-		if(arg.contains("Jewelry")) {
-			attribute = "product_type";
-			switch(arg) {
-				case "Epoxy Resin Jewelry": arg = "Resin"; break;
-				case "Gemstone Jewelry": arg = "Gemstone"; break;
-			}
-		}
-		
+	public List<Product> findProductsWithPriceByTypeOrCategoryLimit(String attribute, String arg, int from, int limit){
 		EntityManager em = emf.createEntityManager();
 		List<Product> list = em.createQuery("SELECT p "
 				+ "FROM Product p "
@@ -99,27 +83,17 @@ public class ProductService{
 		return product;
 	}
 	
-	public List<Product> findProductsWithChildrenInRange(List<Product> prds) {
-		EntityManager em = emf.createEntityManager();
-		prds = em.createQuery("SELECT distinct p "
-						+ "FROM Product p "
-						+ "WHERE p in :prds", Product.class)
-				.setParameter("prds", prds)
-				.setHint("javax.persistence.fetchgraph", em.createEntityGraph("prd-prs"))
-				.getResultList();
-		prds  = em.createQuery("SELECT distinct p "
-						+ "FROM Product p "
-						+ "WHERE p in :products", Product.class)
-				.setParameter("products", prds)
-				.setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
-				.setHint("javax.persistence.fetchgraph", em.createEntityGraph("prd-pimg"))
-				.getResultList();
-		
-		em.close();
-		return prds;
-	}
-	
 	public List<RelatedProductsProjection> findRelated(String category, Long id, Pageable pageable){
 		return prdRepository.findAll(category, id, pageable);
+	}
+
+	@Override
+	public void insert(Product entity) {
+		
+	}
+
+	@Override
+	public void delete(Product entity) {
+		
 	}
 } 

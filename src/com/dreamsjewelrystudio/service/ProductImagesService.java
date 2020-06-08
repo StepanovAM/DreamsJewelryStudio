@@ -9,8 +9,12 @@ import com.dreamsjewelrystudio.models.ProductImages;
 import com.dreamsjewelrystudio.repository.ProductImagesRepository;
 
 @Service
-public class ProductImagesService {
+public class ProductImagesService extends CRUDService<ProductImages>{
 	
+	public ProductImagesService() {
+		super(ProductImages.class);
+	}
+
 	@Autowired
 	private ProductImagesRepository pimgRepo;
 	
@@ -18,11 +22,16 @@ public class ProductImagesService {
 		return pimgRepo.findAll();
 	}
 	
-	public ProductImages persistImg(ProductImages img) {
-		return pimgRepo.saveAndFlush(img);
-	}
-	
 	public List<ProductImages> persistAll(List<ProductImages> img) {
 		return pimgRepo.saveAll(img);
+	}
+
+	public void insert(ProductImages img) {
+		pimgRepo.saveAndFlush(img);
+	}
+	
+	@Override
+	public void delete(ProductImages entity) {
+		pimgRepo.delete(entity);
 	}
 }

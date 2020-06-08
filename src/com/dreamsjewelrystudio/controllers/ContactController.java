@@ -38,7 +38,7 @@ public class ContactController {
 		message.setEmail(email);
 		message.setMsg(msg);
 		
-		msgSrvc.updateMessage(message);
+		msgSrvc.insert(message);
 		return "SUCCESS";
 	}
 	

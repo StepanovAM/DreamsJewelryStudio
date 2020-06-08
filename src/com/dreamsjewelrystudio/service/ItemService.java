@@ -12,24 +12,20 @@ import com.dreamsjewelrystudio.models.Item;
 import com.dreamsjewelrystudio.repository.ItemRepository;
 
 @Service
-public class ItemService {
+public class ItemService extends CRUDService<Item>{
 	
-	@Autowired private ItemRepository itemRepo;
-	@Autowired private EntityManagerFactory emf;
-	
-	public List<Item> findAll(){
-		return itemRepo.findAll();
+	public ItemService() {
+		super(Item.class);
 	}
 
-	public Item persistItem(Item item) {
-		return itemRepo.saveAndFlush(item);
-	}
+	@Autowired private ItemRepository itemRepo;
+	@Autowired private EntityManagerFactory emf;
 	
 	public Item getItemWithProductId(long product_id) {
 		return itemRepo.findItemByProductId(product_id);
 	}
 	
-	public void removeItem(long id) {
+	public void removeItemById(long id) {
 		itemRepo.deleteById(id);
 	}
 	
@@ -49,5 +45,19 @@ public class ItemService {
 	
 	public void updateItemQuantity(int qty, float price, long itemID) {
 		itemRepo.updateQuantity(qty, price, itemID);
+	}
+
+
+	public List<Item> findAll(){
+		return itemRepo.findAll();
+	}
+
+	public void insert(Item item) {
+		itemRepo.saveAndFlush(item);
+	}
+	
+	@Override
+	public void delete(Item entity) {
+		itemRepo.delete(entity);
 	}
 }

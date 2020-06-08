@@ -10,17 +10,22 @@ import org.springframework.stereotype.Service;
 
 import com.dreamsjewelrystudio.models.Session;
 import com.dreamsjewelrystudio.repository.SessionRepository;
+import com.dreamsjewelrystudio.util.Util;
 
 @Service
-public class SessionService {
+public class SessionService extends CRUDService<Session>{
 	
+	public SessionService() {
+		super(Session.class);
+	}
+
 	@Autowired private SessionRepository sessRepository;
 	@Autowired private EntityManagerFactory emf;
 	
 	private String HQL_SELECT_BY_ID = "SELECT DISTINCT s FROM Session s WHERE s.token = :sessionToken";
 	
 	public void deleteItemBySession(String token, long itemID) {
-		if(token == null || token.length()== 0 ) return;
+		if(!Util.isStringNotEmpty(token)) return;
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -38,8 +43,12 @@ public class SessionService {
 		em.close();
 	}
 	
-	public Session createNewSessionWithItems(Session session) {
+	public Session createNewSession(Session session) {
 		return sessRepository.saveAndFlush(session);
+	}
+	
+	public Session findSessionByToken(String token) {
+		return sessRepository.findSessionByToken(token);
 	}
 	
 	public List<Session> findAll(){
@@ -82,5 +91,15 @@ public class SessionService {
 			return null;
 		}
 		return sess;
+	}
+
+	@Override
+	public void insert(Session entity) {
+		sessRepository.saveAndFlush(entity);
+	}
+
+	@Override
+	public void delete(Session entity) {
+		sessRepository.delete(entity);
 	}
 }

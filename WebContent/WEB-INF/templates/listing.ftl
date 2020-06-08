@@ -132,33 +132,28 @@
 			</div>
         </div>
         <!-- /.row -->
-
         <!-- Related Projects Row -->
         <div class="row">
-
             <div class="col-lg-12">
                 <h3 class="page-header">Related Projects</h3>
             </div>
-			
-			<#list related as prd>
-				<div style="height: 120px;" class="col-sm-3 col-xs-6">
-	                <a href="/listing?product_id=${prd.getProduct_id()}">
-	                    <img style="max-width: 100%; max-height: 100%; width: 100%; height: 100%;  top: 0; bottom: 0;
-    								left: 0; right: 0; margin: auto; object-fit: cover;" 
-								 class="img-responsive img-hover img-related" src="${prd.getMain_Img()}" alt="">
-	                </a>
-            	</div>
-			</#list>
-
+			<#if related??>
+				<#list related as prd>
+					<div style="height: 120px;" class="col-sm-3 col-xs-6">
+		                <a href="/listing?product_id=${prd.getProduct_id()}">
+		                    <img style="max-width: 100%; max-height: 100%; width: 100%; height: 100%;  top: 0; bottom: 0;
+	    								left: 0; right: 0; margin: auto; object-fit: cover;" 
+									 class="img-responsive img-hover img-related" src="${prd.getMain_Img()}" alt="">
+		                </a>
+	            	</div>
+				</#list>
+			</#if>
         </div>
         <!-- /.row -->
-
         <hr>
-
         <!-- Footer -->
        <@footer.page>
        </@footer.page>
-
 	<div id="myModal" class="modal">
 	
 	  <!-- Modal content -->
@@ -170,13 +165,10 @@
 	  </div>
 	
 	</div>
-
     </div>
     <!-- /.container -->
-
     <!-- jQuery -->
     <script src="static/js/jquery.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="static/js/bootstrap.min.js"></script>
     
@@ -256,5 +248,4 @@
     
 </@header.page>
 </body>
-
 </html>
