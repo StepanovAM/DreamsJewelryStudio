@@ -16,6 +16,7 @@ public class CatalogPagination {
 	
 	public int[] calculateRange(int numPage) {
 		if(numPage>pagesAmount) return null;
+		
 		int from = 0;
 		for(int i = 1; i < numPage; i++) 
 			from += productsAmountToBeRenderedOnPage;
