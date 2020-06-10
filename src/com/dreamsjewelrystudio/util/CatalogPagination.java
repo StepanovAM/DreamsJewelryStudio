@@ -17,10 +17,10 @@ public class CatalogPagination {
 	public int[] calculateRange(int numPage) {
 		if(numPage>pagesAmount) return null;
 		int from = 0;
-		for(int i = 1; i < numPage; i++) from += productsAmountToBeRenderedOnPage;
-		productsRange[0] = from;
-		productsRange[1] = productsAmountToBeRenderedOnPage;
-		return productsRange;
+		for(int i = 1; i < numPage; i++) 
+			from += productsAmountToBeRenderedOnPage;
+		
+		return new int[] {from, productsAmountToBeRenderedOnPage};
 	}
 
 	public int getPagesAmount() {
